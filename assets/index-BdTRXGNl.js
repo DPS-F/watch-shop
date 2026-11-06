@@ -1,0 +1,12 @@
+(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var e=document.querySelector(`#loading`),t=document.querySelector(`#error`),n=document.querySelector(`#empty`),r=document.querySelector(`#products`),i=document.querySelector(`#search-input`),a=document.querySelector(`#search-btn`),o=document.querySelector(`#retry-btn`),s=document.querySelector(`#category-select`),c=document.querySelector(`#theme-toggle`),l=`https://dummyjson.com/products`;async function u(i=``,a=`all-watches`){e.style.display=`block`,t.style.display=`none`,n.style.display=`none`,r.innerHTML=``;try{let t=``;t=i?`${l}/search?q=${i}`:a===`all-watches`?`${l}/search?q=watch`:`${l}/category/${a}`;let o=await fetch(t);if(!o.ok)throw Error(`Ошибка HTTP: ${o.status}`);let s=await o.json();if(e.style.display=`none`,s.products.length===0){n.style.display=`block`;return}r.innerHTML=s.products.map(e=>`
+            <div class="product-card">
+                <img src="${e.thumbnail}" alt="${e.title}" 
+                     onerror="this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=300&auto=format&fit=crop'">
+                <h3>${e.title}</h3>
+                <p class="description">${e.description.substring(0,60)}...</p>
+                <div class="card-footer">
+                    <p class="price">$${e.price}</p>
+                    <p class="rating">⭐ ${e.rating}</p>
+                </div>
+            </div>
+        `).join(``)}catch(n){console.error(`Ошибка:`,n),e.style.display=`none`,t.style.display=`block`}}u(``,s.value),a.addEventListener(`click`,()=>{u(i.value.trim())}),s.addEventListener(`change`,e=>{i.value=``,u(``,e.target.value)}),i.addEventListener(`keypress`,e=>{e.key===`Enter`&&u(i.value.trim())}),o.addEventListener(`click`,()=>{u(i.value.trim())}),c.addEventListener(`click`,()=>{document.body.classList.toggle(`dark-theme`),c.textContent=document.body.classList.contains(`dark-theme`)?`☀️ Светлая тема`:`🌙 Темная тема`});
